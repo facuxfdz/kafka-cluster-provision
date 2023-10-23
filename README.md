@@ -16,6 +16,7 @@ Before running the Ansible playbooks, make sure you have the following prerequis
 
 Follow these steps to configure Apache Kafka with Ansible:
 1. **Clone the Repository**: Clone this repository to your control machine.
+2. **Customize the properties files**: Customize the `server.properties` and `zookeeper.properties` files in the `setup-properties` directory with your desired configurations.
 2. **Run the main playbook**: Run the following command to run the main playbook:
     ```bash
     ansible-playbook --ask-become-pass main.yml
@@ -23,6 +24,6 @@ Follow these steps to configure Apache Kafka with Ansible:
     This playbook will run the following playbooks in order:
     - `get-apache-kafka/site.yml`: This playbook will download Apache Kafka and Zookeeper from the official website.
     - `configure-env/site.yml`: This playbook will configure the environment for Apache Kafka and Zookeeper.
-    - `configure-properties/site.yml`: This playbook will configure the properties for Apache Kafka and Zookeeper (`server.properties` and `zookeeper.properties` files).
+    - `configure-properties/site.yml`: This playbook will configure the properties for Apache Kafka and Zookeeper.
 
-You will be prompted to enter the password for the user with sudo privileges on the target machine. Enter the password and press Enter to continue.
+You will be prompted to enter the password for the user with sudo privileges on the target machine. Enter the password and press Enter to continue.  
