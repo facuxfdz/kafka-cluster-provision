@@ -1,0 +1,63 @@
+---
+- name: Get Apache Kafka
+  hosts: localhost
+  tasks:
+
+    - name: Check if Kafka has been downloaded
+      become: true
+      become_user: root
+      ansible.builtin.stat:
+        path: /opt/kafka/bin
+      register: ansible_facts
+
+    - name: Download Apache Kafka from source
+      become: true
+      become_user: root
+      ansible.builtin.get_url:
+        url: https://downloads.apache.org/kafka/3.6.0/kafka_2.12-3.6.0.tgz
+        dest: /opt/kafka-3.6.0.tgz
+        mode: '0755'
+      when: not ansible_facts.stat.exists
+      register: download_result
+
+    - name: Untar Apache Kafka
+      become: true
+      become_user: root
+      ansible.builtin.unarchive:
+        src: /opt/kafka-3.6.0.tgz
+        dest: /opt
+        mode: '0755'
+      when: download_result.changed
+
+    - name: Create Kafka Directory
+      become: true
+      become_user: root
+      ansible.builtin.file:
+        path: /opt/kafka
+        state: directory
+        mode: '0755'
+      when: download_result.changed
+
+    - name: Move Kafka
+      become: true
+      become_user: root
+      ansible.builtin.shell: "mv /opt/kafka_2.12-3.6.0/* /opt/kafka"
+      register: output
+      changed_when: output.stdout != "" and kafka_check.failed
+      when: download_result.changed
+
+    - name: Delete Kafka Source
+      become: true
+      become_user: root
+      ansible.builtin.file:
+        path: /opt/kafka_2.12-3.6.0
+        state: absent
+      when: download_result.changed
+
+    - name: Delete tar file
+      become: true
+      become_user: root
+      ansible.builtin.file:
+        path: /opt/kafka-3.6.0.tgz
+        state: absent
+      when: download_result.changed

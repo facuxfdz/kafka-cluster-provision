@@ -1,0 +1,26 @@
+---
+- name: Set Up server.properties and zookeeper.properties
+  hosts: localhost
+  tasks:
+    - name: Check if Kafka has been downloaded
+      become: true
+      become_user: root
+      ansible.builtin.stat:
+        path: /opt/kafka/bin
+      register: kafka_check
+    - name: Set Up server.properties
+      become: true
+      become_user: root
+      ansible.builtin.copy:
+        src: server.properties
+        dest: /opt/kafka/config/server.properties
+        mode: '0755'
+      when: kafka_check.stat.exists
+    - name: Set Up zookeeper.properties
+      become: true
+      become_user: root
+      ansible.builtin.copy:
+        src: zookeeper.properties
+        dest: /opt/kafka/config/zookeeper.properties
+        mode: '0755'
+      when: kafka_check.stat.exists

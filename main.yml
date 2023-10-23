@@ -1,0 +1,9 @@
+---
+- name: Get Apache Kafka
+  import_playbook: get-apache-kafka/site.yml
+
+- name: Envrionment Setup
+  import_playbook: configure-env/site.yml
+
+- name: Set Up server.properties and zookeeper.properties
+  import_playbook: setup-properties/site.yml
